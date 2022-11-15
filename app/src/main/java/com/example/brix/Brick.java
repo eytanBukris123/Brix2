@@ -15,9 +15,9 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
     private int brickType;
     private int size;
 
-    private int[] pictures = {R.drawable.gold_breake2, R.drawable.gold_breake1};
+    private int[] pictures = {R.drawable.gold_stone3, R.drawable.gold_stone, R.drawable.gold_stone2};
 
-    public Brick(Class<GameActivity> context, int health, int time, int brickType, int size) {
+    public Brick(Context context, int health, int time, int brickType, int size) {
         super(context);
         this.setImageResource(R.drawable.gold_stone3);
         this.health = health;
