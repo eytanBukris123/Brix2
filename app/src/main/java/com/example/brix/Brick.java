@@ -2,9 +2,6 @@ package com.example.brix;
 
 import android.content.Context;
 import android.os.Handler;
-import android.widget.ImageView;
-
-import java.util.ArrayList;
 
 public class Brick extends androidx.appcompat.widget.AppCompatImageView{
 
@@ -19,7 +16,7 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
 
     public Brick(Context context, int health, int time, int brickType, int size) {
         super(context);
-        this.setImageResource(R.drawable.gold_stone3);
+        this.setImageResource(R.drawable.gold_stone2);
         this.health = health;
         this.time = time;
         this.type = types[brickType];
@@ -71,17 +68,17 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
 
     }
 
-    public void beHitted(){
+    public void Hit(){
         this.health--;
-        this.setImageResource(pictures[health]);
-        if(health==0){
+        if(health==0)
             Dead();
-        }
+        else
+            this.setImageResource(pictures[health-1]);
     }
 
     public void Dead(){
         this.setVisibility(INVISIBLE);
-        this.setImageResource(0);
+//        this.setImageResource(0);
     }
 
     public void timer(){
