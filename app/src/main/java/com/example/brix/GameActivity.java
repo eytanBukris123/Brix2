@@ -38,7 +38,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         public void createBrick(){
-                brick1 = new Brick(this, 3, 3, 2, 30);
+                brick1 = new Brick(this, 3, 3, 2, 300);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
                 brick1.setLayoutParams(lp);
                 gameLayout.addView(brick1);
