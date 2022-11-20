@@ -13,11 +13,11 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
     private int brickType;
     private int size;
 
-    private int[] pictures = {R.drawable.gold_stone3, R.drawable.gold_stone2, R.drawable.gold_stone};
+    private int[] pictures = {R.drawable.gold_stone2, R.drawable.gold_stone, R.drawable.gold_stone3};
 
     public Brick(Context context, int health, int time, int brickType, int size) {
         super(context);
-        this.setImageResource(R.drawable.gold_stone);
+        this.setImageResource(R.drawable.gold_stone3);
         this.health = health;
         this.time = time;
         this.type = types[brickType];
@@ -66,25 +66,16 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
         this.size = size;
     }
 
-    public void createBrick(){
-        GameActivity ga = new GameActivity();
-        ga.createBrick();
-    }
-
-    public void Hit(){
+    public boolean Hit(){
         this.health--;
-        this.setSize(this.getSize()-80);
-        this.setLayoutParams(new LinearLayout.LayoutParams(size-10, size));
-        if(health<=0)
-            Dead();
+        if(health<=0) {
+            return true;
+        }
         else
             this.setImageResource(pictures[health-1]);
+        return false;
     }
 
-    public void Dead(){
-        this.setVisibility(INVISIBLE);
-        createBrick();
-    }
 //
 //    public void timer(){
 //        Handler h2 = new Handler();
