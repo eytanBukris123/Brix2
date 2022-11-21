@@ -44,6 +44,9 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 numOfCoins = getNumberOfCoins();
                 coinsTv.setText("" + numOfCoins);
 
+                SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
+                pickaxe.setImageResource(sharedPref.getInt("Pickaxe", R.drawable.pickaxe));
+
         }
 
         public void createBrick(){

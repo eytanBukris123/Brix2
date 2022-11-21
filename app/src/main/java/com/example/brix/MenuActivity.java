@@ -31,7 +31,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
         else if(v==shopbtn){
-
+            Intent intent = new Intent(MenuActivity.this, ShopActivity.class);
+            startActivity(intent);
         }
         else if(v==exitbtn){
 
