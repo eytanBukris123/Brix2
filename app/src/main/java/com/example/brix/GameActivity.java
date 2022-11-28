@@ -19,13 +19,17 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         Brick brick1;
         Coins coin;
         ConstraintLayout gameLayout;
-        ImageView pickaxe;
+        Pickaxe pickaxe;
         float xDown = 0, yDown = 0;
         Animation pickaxeHitAnim;
         Handler handler;
         boolean canHit = true;
         int numOfCoins = 0;
         TextView coinsTv;
+        int timeToHit = 1000;
+        int powerLvl;
+        int speedLvl;
+
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +37,8 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 setContentView(R.layout.activity_game);
                 handler = new Handler();
                 gameLayout = findViewById(R.id.gameLayout);
-                pickaxe = findViewById(R.id.pickaxe);
-                pickaxe.bringToFront();
+                createPickaxe();
+                pickaxe.setZ(2);
                 pickaxe.getParent().requestLayout();
                 pickaxe.setOnClickListener(this);
                 pickaxe.setOnTouchListener(this);
@@ -43,9 +47,25 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 coinsTv = findViewById(R.id.coinsTv);
                 numOfCoins = getNumberOfCoins();
                 coinsTv.setText("" + numOfCoins);
+                timeToHit = (11-pickaxe.getSpeed())*150;
 
+//                SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPref.edit();
+//                editor.putInt("PowerLvl", 1);
+//                editor.putInt("SpeedLvl", 1);
+//                editor.putInt("Coins", 0);
+//                editor.apply();
+
+        }
+
+        public void createPickaxe(){
                 SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
-                pickaxe.setImageResource(sharedPref.getInt("Pickaxe", R.drawable.pickaxe));
+                powerLvl = sharedPref.getInt("PowerLvl", 1);
+                speedLvl = sharedPref.getInt("SpeedLvl", 1);
+                pickaxe = new Pickaxe(this, R.drawable.pickaxe, speedLvl, powerLvl);
+                gameLayout.addView(pickaxe);
+                pickaxe.setX(450);
+                pickaxe.setY(850);
 
         }
 
@@ -87,46 +107,46 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-                //Hit();
-                pickaxe.bringToFront();
-                switch(motionEvent.getActionMasked()){
-                        case MotionEvent.ACTION_DOWN:
-                                xDown=motionEvent.getX();
-                                yDown=motionEvent.getY();
+                if (canHit) {
+                        switch (motionEvent.getActionMasked()) {
+                                case MotionEvent.ACTION_DOWN:
+                                        xDown = motionEvent.getX();
+                                        yDown = motionEvent.getY();
 
-                                break;
+                                        break;
 
-                        case MotionEvent.ACTION_MOVE:
-                                float movedX, movedY;
-                                movedX = motionEvent.getX();
-                                movedY = motionEvent.getY();
+                                case MotionEvent.ACTION_MOVE:
+                                        float movedX, movedY;
+                                        movedX = motionEvent.getX();
+                                        movedY = motionEvent.getY();
 
-                                float distanceX = movedX-xDown;
-                                float distanceY = movedY-yDown;
+                                        float distanceX = movedX - xDown;
+                                        float distanceY = movedY - yDown;
 
-                                pickaxe.setX(pickaxe.getX()+distanceX);
-                                pickaxe.setY(pickaxe.getY()+distanceY);
+                                        pickaxe.setX(pickaxe.getX() + distanceX);
+                                        pickaxe.setY(pickaxe.getY() + distanceY);
 
-                                break;
-                        case MotionEvent.ACTION_UP:
-                                Hit();
+                                        break;
+                                case MotionEvent.ACTION_UP:
+                                        Hit();
 
-                                break;
+                                        break;
+                        }
+
                 }
-
-                return true;
+                        return true;
         }
 
         public void Hit(){
                 if(canHit) {
                         canHit = false;
-                        pickaxe.animate().rotation(-80f).setDuration(300).start();
+                        pickaxe.animate().rotation(-80f).setDuration(timeToHit+100).start();
                         handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                        pickaxe.animate().rotation(0).setDuration(200).start();
+                                        pickaxe.animate().rotation(0).setDuration(timeToHit).start();
                                         if(Collision(brick1, pickaxe)){
-                                                if(brick1.Hit()){
+                                                if(brick1.Hit(pickaxe.getDammage())){
                                                         brick1.setVisibility(View.GONE);
                                                         createCoins();
                                                         createBrick();
@@ -137,9 +157,9 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                                 public void run() {
                                                         canHit=true;
                                                 }
-                                        }, 200);
+                                        }, timeToHit);
                                 }
-                        }, 300);
+                        }, timeToHit+100);
                 }
         }
 

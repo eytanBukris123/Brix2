@@ -66,14 +66,17 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
         this.size = size;
     }
 
-    public boolean Hit(){
-        this.health--;
+    public boolean Hit(int dammage){
+        this.health-= dammage;
         if(health<=0) {
             return true;
         }
-        else
-            this.setImageResource(pictures[health-1]);
-        return false;
+        else {
+            if(pictures[health-1] != 0) {
+                this.setImageResource(pictures[health - 1]);
+            }
+        }
+            return false;
     }
 
 //

@@ -7,19 +7,6 @@
     android:background="@drawable/cave_background"
     android:id="@+id/gameLayout">
 
-    <ImageView
-        android:id="@+id/pickaxe"
-        android:layout_width="127dp"
-        android:layout_height="128dp"
-        android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/pickaxe" />
-
     <TextView
         android:id="@+id/coinsTv"
         android:layout_width="wrap_content"
