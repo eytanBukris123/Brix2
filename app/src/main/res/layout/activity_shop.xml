@@ -35,6 +35,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <TextView
+        android:id="@+id/powerTitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Pickaxe skin"
+        android:textColor="#8BC34A"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upgradePower"
+        app:layout_constraintVertical_bias="0.114" />
+
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="153dp"
@@ -48,18 +63,42 @@
         app:layout_constraintVertical_bias="0.273"
         app:srcCompat="@drawable/power_icon" />
 
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="153dp"
+        android:layout_height="149dp"
+        android:layout_marginTop="12dp"
+        android:scaleType="fitEnd"
+        app:layout_constraintBottom_toTopOf="@+id/upgradeSkin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/powerTitle2"
+        app:srcCompat="@drawable/mystery_pickaxe" />
+
     <Button
         android:id="@+id/upgradePower"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="#F30B0B"
-        android:text="Upgrade"
+        android:text="Upgrade 10$"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.083"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
         app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/upgradeSkin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#4CAF50"
+        android:text="Upgrade 10$"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/speedTitle"
@@ -97,7 +136,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="#FF9800"
-        android:text="Upgrade"
+        android:text="Upgrade 15$"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.619"

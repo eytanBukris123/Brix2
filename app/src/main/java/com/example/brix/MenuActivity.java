@@ -35,7 +35,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
         else if(v==exitbtn){
-
+            finish();
+            System.exit(0);
         }
     }
 }

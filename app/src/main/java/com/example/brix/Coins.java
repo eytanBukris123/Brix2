@@ -9,13 +9,15 @@ public class Coins extends androidx.appcompat.widget.AppCompatImageView{
     private int time;
     private String[] types = {"stone", "silver", "gold", "diamond"};
     int coinType;
+    int coinValue;
 
-    public Coins(Context context, int time, int coinType) {
+    public Coins(Context context, int time, int coinType, int coinValue) {
         super(context);
         this.setImageResource(R.drawable.gold_coins);
         this.setLayoutParams(new LinearLayout.LayoutParams(150, 150));
         this.time = time;
         this.coinType = coinType;
+        this.coinValue = coinValue;
     }
 
     public int getTime() {
@@ -27,10 +29,9 @@ public class Coins extends androidx.appcompat.widget.AppCompatImageView{
     }
 
     public int collect(){
+
         this.setVisibility(View.GONE);
-        if(coinType == 2)
-            return 10;
-        return 5;
+        return coinValue;
 
     }
 
