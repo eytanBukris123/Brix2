@@ -1,6 +1,7 @@
 package com.example.brix;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -35,7 +36,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         int powerLvl;
         int speedLvl;
         int skinLvl;
-        boolean brick2create = false;
+//        boolean brick2create = false;
 
 
         @Override
@@ -62,8 +63,8 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 //                SharedPreferences.Editor editor = sharedPref.edit();
 //                editor.putInt("SkinLvl", 1);
 //                editor.putInt("PowerLvl", 1);
-//                editor.putInt("SpeedLvl", 5);
-//                editor.putInt("Coins", 3000);
+//                editor.putInt("SpeedLvl", 1);
+//                editor.putInt("Coins", 0);
 //                editor.apply();
 
         }
@@ -80,11 +81,12 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 if(skinLvl == 5){
                         pickaxe.setLayoutParams(new LinearLayout.LayoutParams(600, 600));
                 }
+
         }
 
         public void createBrick(){
                 Random r = new Random();
-                int size = r.nextInt(8) + 1;
+                int size = r.nextInt(10) + 1;
                 int brickType = r.nextInt(3);
                 int coinValue = size*2;
                 int time = 12/(brickType+1);
@@ -94,44 +96,40 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 gameLayout.addView(brick1);
                 brick1.setX(r.nextInt(800));
                 brick1.setY(r.nextInt(1600));
-                brickTime(time, brick1, 1);
-                handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                                if(!brick2create) {
-                                        createBrick2();
-                                        brick2create = true;
-                                }
-                        }
-                }, 5000);
+                brickTime(time, brick1);
+//                handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                                if(!brick2create) {
+//                                        createBrick2();
+//                                        brick2create = true;
+//                                }
+//                        }
+//                }, 5000);
         }
 
-        public void createBrick2(){
-                Random r = new Random();
-                int size = r.nextInt(8) + 1;
-                int brickType = r.nextInt(3);
-                int coinValue = size*2;
-                int time = 12/(brickType+1);
-                brick2 = new Brick(this, size, time, brickType, size*70);
-//                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
-//                brick1.setLayoutParams(lp);
-                gameLayout.addView(brick2);
-                brick2.setX(r.nextInt(800));
-                brick2.setY(r.nextInt(1600));
-                brickTime(time, brick2, 2);
-        }
+//        public void createBrick2(){
+//                Random r = new Random();
+//                int size = r.nextInt(8) + 1;
+//                int brickType = r.nextInt(3);
+//                int coinValue = size*2;
+//                int time = 12/(brickType+1);
+//                brick2 = new Brick(this, size, time, brickType, size*70);
+////              LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
+////              brick1.setLayoutParams(lp);
+//                gameLayout.addView(brick2);
+//                brick2.setX(r.nextInt(800));
+//                brick2.setY(r.nextInt(1600));
+//                brickTime(time, brick2, 2);
+//        }
 
-        public void brickTime(int time, ImageView brick, int num){
+        public void brickTime(int time, ImageView brick){
                 handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                                 if(brick.getVisibility() != View.GONE) {
                                         brick.setVisibility(View.GONE);
-                                        if(num==2){
-                                                brick2create = false;
-                                        }
-                                        else
-                                                createBrick();
+                                        createBrick();
                                 }
                         }
                 }, time*1000);
@@ -145,6 +143,8 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 coin.setY(brick1.getY());
                 coin.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
+                                MediaPlayer coinsCollected= MediaPlayer.create(GameActivity.this,R.raw.cash_register);
+                                coinsCollected.start();
                                 numOfCoins += ((Coins) v).collect();
                                 coinsTv.setText("" + numOfCoins);
                                 setNumberOfCoins(numOfCoins);
@@ -215,28 +215,62 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                         handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                        pickaxe.animate().rotation(0).setDuration(timeToHit).start();
+                                        pickaxe.animate().rotation(0).setDuration(timeToHit-300).start();
                                         if(Collision(brick1, pickaxe, 1)){
-                                                if(brick1.Hit(pickaxe.getDammage())){
-                                                        brick1.setVisibility(View.GONE);
+                                                MediaPlayer hitSound= MediaPlayer.create(GameActivity.this,R.raw.hit);
+                                                hitSound.start();
+                                                if(brick1.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.bomb).getConstantState()){
+                                                        numOfCoins -= 50*(brick1.getSize()/70);
+                                                        MediaPlayer bombExplosion= MediaPlayer.create(GameActivity.this,R.raw.bombexplosion);
+                                                        bombExplosion.start();
+                                                        if(numOfCoins<0){
+                                                                numOfCoins = 0;
+                                                        }
+                                                        coinsTv.setText("" + numOfCoins);
+                                                        setNumberOfCoins(numOfCoins);
+                                                        SharedPreferences sharedPref = getSharedPreferences("application", GameActivity.MODE_PRIVATE);
+                                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                                        editor.putInt("Coins", numOfCoins);
+                                                        editor.apply();
                                                         createCoins();
+                                                        brick1.setVisibility(View.GONE);
                                                         createBrick();
                                                 }
-                                        }
-                                        if(brick2!=null) {
-                                                if (Collision(brick2, pickaxe, 2)) {
-                                                        if (brick2.Hit(pickaxe.getDammage())) {
-                                                                brick2.setVisibility(View.GONE);
+                                                else {
+                                                        Random r = new Random();
+                                                        int bomb = r.nextInt(10) + 1;
+                                                        if (bomb == 7) {
+                                                                brick1.setImageResource(R.drawable.bomb);
+                                                                handler.postDelayed(new Runnable() {
+                                                                        @Override
+                                                                        public void run() {
+                                                                                brick1.setVisibility(View.GONE);
+                                                                                createCoins();
+                                                                                createBrick();
+                                                                        }
+                                                                }, 5000);
+                                                        } else if (brick1.Hit(pickaxe.getDammage())) {
+                                                                brick1.setVisibility(View.GONE);
                                                                 createCoins();
+                                                                createBrick();
+
                                                         }
                                                 }
                                         }
+//                                        if(brick2!=null) {
+//                                                if (Collision(brick2, pickaxe, 2)) {
+//                                                        if (brick2.Hit(pickaxe.getDammage())) {
+//                                                                brick2.setVisibility(View.GONE);
+//                                                                createCoins();
+//                                                        }
+//                                                }
+//                                        }
                                         handler.postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                         canHit=true;
                                                 }
-                                        }, timeToHit);
+                                        }, timeToHit-300);
                                 }
                         }, timeToHit+100);
                 }

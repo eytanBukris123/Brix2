@@ -80,8 +80,8 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
         this.size = size;
     }
 
-    public boolean Hit(int dammage){
-        this.health-= dammage;
+    public boolean Hit(int damage){
+        this.health-= damage;
         if(health<=0) {
             return true;
         }
