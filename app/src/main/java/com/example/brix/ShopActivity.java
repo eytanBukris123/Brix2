@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
@@ -25,6 +29,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         powerTitle = findViewById(R.id.powerTitle);
         speedTitle = findViewById(R.id.speedTitle);
@@ -52,7 +59,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         if(powerLvl==5){
             maxLvl(upgradePower);
         }
-        if(speedLvl==10){
+        if(speedLvl==9){
             maxLvl(upgradeSpeed);
         }
         if(skinLvl==6){
@@ -123,4 +130,15 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

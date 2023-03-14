@@ -13,72 +13,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:outlineProvider="bounds"
-        android:shadowColor="#F6BF1A"
-        android:shadowDx="10"
-        android:shadowDy="10"
-        android:shadowRadius="10"
         android:text="𝗕𝗿𝗶𝗰𝗸𝘀"
-        android:textColor="#B55132"
+        android:textColor="#FF9800"
         android:textSize="70sp"
+        android:shadowRadius="10"
+        android:shadowColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.099" />
 
-    <Button
-        android:id="@+id/playbtn"
-        android:layout_width="200dp"
-        android:layout_height="70dp"
-        android:backgroundTint="#F6BF1A"
-        android:text="Play"
-        android:textColor="#5E3B07"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.182" />
 
-    <Button
-        android:id="@+id/shopbtn"
-        android:layout_width="200dp"
-        android:layout_height="70dp"
-        android:backgroundTint="#F6BF1A"
-        android:text="Shop"
-        android:textColor="#5E3B07"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.431" />
-
-    <Button
-        android:id="@+id/exitbtn"
-        android:layout_width="200dp"
-        android:layout_height="70dp"
-        android:backgroundTint="#F6BF1A"
-        android:text="Exit"
-        android:textColor="#5E3B07"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.679" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="made by Boby"
-        android:textStyle="bold"
         android:textColor="#5E3B07"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/playbtn"
+        android:layout_width="253dp"
+        android:layout_height="288dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exitbtn"
-        app:layout_constraintVertical_bias="0.888" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/play_btn" />
+
+    <ImageView
+        android:id="@+id/shopbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playbtn"
+        app:srcCompat="@drawable/shop_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,13 +36,13 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         int powerLvl;
         int speedLvl;
         int skinLvl;
-//        boolean brick2create = false;
 
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_game);
+
                 handler = new Handler();
                 gameLayout = findViewById(R.id.gameLayout);
                 createPickaxe();
@@ -63,7 +63,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 //                SharedPreferences.Editor editor = sharedPref.edit();
 //                editor.putInt("SkinLvl", 1);
 //                editor.putInt("PowerLvl", 1);
-//                editor.putInt("SpeedLvl", 1);
+//                editor.putInt("SpeedLvl", 9);
 //                editor.putInt("Coins", 0);
 //                editor.apply();
 
@@ -251,6 +251,10 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                                                 }, 5000);
                                                         } else if (brick1.Hit(pickaxe.getDammage())) {
                                                                 brick1.setVisibility(View.GONE);
+                                                                hitSound.stop();
+                                                                MediaPlayer rockBreakSound= MediaPlayer.create(GameActivity.this,R.raw.rock_destroy);
+                                                                rockBreakSound.setVolume(0.15f, 0.15f);
+                                                                rockBreakSound.start();
                                                                 createCoins();
                                                                 createBrick();
 
