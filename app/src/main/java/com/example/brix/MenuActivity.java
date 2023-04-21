@@ -2,6 +2,7 @@ package com.example.brix;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageView playbtn, shopbtn;
+    MediaPlayer backgroundMusic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         shopbtn = findViewById(R.id.shopbtn);
         playbtn.setOnClickListener(this);
         shopbtn.setOnClickListener(this);
+
+        backgroundMusic= MediaPlayer.create(MenuActivity.this,R.raw.bricks_background_music);
+        backgroundMusic.start();
 
         }
 

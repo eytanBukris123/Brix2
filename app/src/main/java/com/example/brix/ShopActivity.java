@@ -107,7 +107,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                 editor.apply();
                 speedPrice = speedLvl*10;
                 upgradeSpeed.setText("Upgrade " + speedPrice + "$");
-                if(speedLvl==10){
+                if(speedLvl==9){
                     maxLvl(upgradeSpeed);
                 }
             }

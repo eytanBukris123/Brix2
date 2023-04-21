@@ -24,6 +24,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 
         Brick brick1, brick2;
         Coins coin;
+        GiftBox giftBox;
         ConstraintLayout gameLayout;
         Pickaxe pickaxe;
         float xDown = 0, yDown = 0;
@@ -59,12 +60,14 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.setDisplayHomeAsUpEnabled(true);
 
+                createGift(5000);
+
 //                SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
 //                SharedPreferences.Editor editor = sharedPref.edit();
-//                editor.putInt("SkinLvl", 1);
-//                editor.putInt("PowerLvl", 1);
-//                editor.putInt("SpeedLvl", 9);
-//                editor.putInt("Coins", 0);
+//                editor.putInt("SkinLvl", 3);
+//                editor.putInt("PowerLvl", 2);
+//                editor.putInt("SpeedLvl", 6);
+//                editor.putInt("Coins", 300);
 //                editor.apply();
 
         }
@@ -162,6 +165,33 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                 }
                         }
                 }, time*1000);
+        }
+
+        public void createGift(int time){
+                Random r = new Random();
+                int giftTime = r.nextInt(7)+3;
+                handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                                giftBox = new GiftBox(GameActivity.this, 5000);
+                                gameLayout.addView(giftBox);
+                                giftBox.setX(r.nextInt(800));
+                                giftBox.setY(r.nextInt(1600));
+                                giftBox.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                                giftBox.setVisibility(View.GONE);
+                                        }
+                                });
+                                handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                                giftBox.setVisibility(View.GONE);
+                                                createGift(5000);
+                                        }
+                                }, 5000);
+                        }
+                }, 10000*giftTime);
         }
 
         public int getNumberOfCoins() {
