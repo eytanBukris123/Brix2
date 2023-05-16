@@ -15,7 +15,7 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
     private int brickType;
     private int size;
 
-    private int[] silverPictures = {R.drawable.stone3, R.drawable.stone2, R.drawable.stone1};
+    private int[] silverPictures = {R.drawable.rock3, R.drawable.rock2, R.drawable.rock};
     private int[] goldPictures = {R.drawable.gold_stone2, R.drawable.gold_stone, R.drawable.gold_stone3};
     private int[] dimondPictures = {R.drawable.diamond2, R.drawable.diamond1, R.drawable.diamond};
     private int[] pictures;

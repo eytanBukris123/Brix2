@@ -3,6 +3,7 @@ package com.example.brix;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     TextView powerTitle, speedTitle;
     boolean haveWitchPickaxe = false;
     int powerPrice, speedPrice, skinPrice;
+    MediaPlayer buySound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        buySound = MediaPlayer.create(ShopActivity.this,R.raw.buy_sound);
 
         powerTitle = findViewById(R.id.powerTitle);
         speedTitle = findViewById(R.id.speedTitle);
@@ -56,7 +60,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         upgradePower.setText("Upgrade " + powerPrice + "$");
         upgradeSpeed.setText("Upgrade " + speedPrice + "$");
         upgradeSkin.setText("Upgrade " + skinPrice + "$");
-        if(powerLvl==5){
+        if(powerLvl==7){
             maxLvl(upgradePower);
         }
         if(speedLvl==9){
@@ -79,6 +83,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         if(v==upgradePower){
             if((numOfCoins >= powerPrice)) {
                 powerLvl++;
+                buySound.start();
                 powerTitle.setText("Power Level " + powerLvl);
                 SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -89,7 +94,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                 editor.apply();
                 powerPrice = powerLvl*15;
                 upgradePower.setText("Upgrade " + powerPrice + "$");
-                if(powerLvl==5){
+                if(powerLvl==7){
                     maxLvl(upgradePower);
                 }
             }
@@ -97,6 +102,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         else if(v==upgradeSpeed){
             if(numOfCoins >= speedPrice) {
                 speedLvl++;
+                buySound.start();
                 speedTitle.setText("Power Level " + speedLvl);
                 SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -116,6 +122,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
             if(numOfCoins>=skinPrice){
                 SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
                 skinLvl++;
+                buySound.start();
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt("SkinLvl", skinLvl);
                 numOfCoins-= skinPrice;

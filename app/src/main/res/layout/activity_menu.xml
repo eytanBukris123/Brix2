@@ -68,4 +68,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bricks_icon" />
 
+    <ImageView
+        android:id="@+id/instructionsBtn"
+        android:layout_width="59dp"
+        android:layout_height="59dp"
+        app:srcCompat="@android:drawable/ic_menu_sort_by_size"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="656dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

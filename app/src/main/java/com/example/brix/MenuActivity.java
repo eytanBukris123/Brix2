@@ -10,8 +10,7 @@ import android.widget.ImageView;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ImageView playbtn, shopbtn;
-    MediaPlayer backgroundMusic;
+    ImageView playbtn, shopbtn, instructionsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +19,10 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
         playbtn = findViewById(R.id.playbtn);
         shopbtn = findViewById(R.id.shopbtn);
+        instructionsBtn = findViewById(R.id.instructionsBtn);
         playbtn.setOnClickListener(this);
         shopbtn.setOnClickListener(this);
-
-        backgroundMusic= MediaPlayer.create(MenuActivity.this,R.raw.bricks_background_music);
-        backgroundMusic.start();
-
+        instructionsBtn.setOnClickListener(this);
         }
 
     @Override
@@ -36,6 +33,10 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         }
         else if(v==shopbtn){
             Intent intent = new Intent(MenuActivity.this, ShopActivity.class);
+            startActivity(intent);
+        }
+        else if(v==instructionsBtn){
+            Intent intent = new Intent(MenuActivity.this, InstructionsActivity.class);
             startActivity(intent);
         }
     }

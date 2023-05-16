@@ -1,11 +1,13 @@
 package com.example.brix;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.os.Handler;
@@ -37,6 +39,10 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         int powerLvl;
         int speedLvl;
         int skinLvl;
+        boolean giftOpen = false;
+        MediaPlayer backgroundMusic;
+        ImageView soundImg;
+        boolean music = true;
 
 
         @Override
@@ -46,6 +52,8 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 
                 handler = new Handler();
                 gameLayout = findViewById(R.id.gameLayout);
+                soundImg = findViewById(R.id.soundImg);
+                soundImg.setOnClickListener(this);
                 createPickaxe();
                 pickaxe.setZ(2);
                 pickaxe.getParent().requestLayout();
@@ -64,10 +72,10 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 
 //                SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
 //                SharedPreferences.Editor editor = sharedPref.edit();
-//                editor.putInt("SkinLvl", 3);
+//                editor.putInt("SkinLvl", 1);
 //                editor.putInt("PowerLvl", 2);
-//                editor.putInt("SpeedLvl", 6);
-//                editor.putInt("Coins", 300);
+//                editor.putInt("SpeedLvl", 3);
+//                editor.putInt("Coins", 1000);
 //                editor.apply();
 
         }
@@ -181,6 +189,8 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                         @Override
                                         public void onClick(View view) {
                                                 giftBox.setVisibility(View.GONE);
+                                                int number = r.nextInt(49)+1;
+                                                OpenGiftWindow(number*10);
                                         }
                                 });
                                 handler.postDelayed(new Runnable() {
@@ -310,6 +320,63 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 }
         }
 
+        public void OpenGiftWindow(int number){
+                final Dialog dialog = new Dialog(GameActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.gift_window);
+                final ImageView giftBox;
+                final ImageView typeImg;
+                final TextView numText;
+                giftOpen = false;
+                giftBox = dialog.findViewById(R.id.gift_box);
+                typeImg = dialog.findViewById(R.id.typeImg);
+                numText = dialog.findViewById(R.id.numText);
+                typeImg.setVisibility(View.INVISIBLE);
+                numText.setVisibility(View.INVISIBLE);
+
+                giftBox.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                                typeImg.setVisibility(View.VISIBLE);
+                                numText.setVisibility(View.VISIBLE);
+                                if(!giftOpen) {
+                                        MediaPlayer openGift = MediaPlayer.create(GameActivity.this, R.raw.open_gift);
+                                        openGift.start();
+                                        giftOpen = true;
+                                }
+                                else{
+                                        numOfCoins+=number;
+                                        SharedPreferences sharedPref = getSharedPreferences("application", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putInt("Coins", numOfCoins);
+                                        editor.apply();
+                                        coinsTv.setText("" + numOfCoins);
+
+                                        dialog.cancel();
+                                }
+                        }
+                });
+
+                numText.setText("" + number);
+                numText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                                numOfCoins+=number;
+                                SharedPreferences sharedPref = getSharedPreferences("application", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putInt("Coins", numOfCoins);
+                                editor.apply();
+                                coinsTv.setText("" + numOfCoins);
+
+                                dialog.cancel();
+                        }
+                });
+
+                dialog.show();
+
+        }
+
         public boolean Collision(ImageView brick, ImageView pickaxe, int num)
         {
                 Rect PickaxeRect = new Rect();
@@ -335,8 +402,32 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         @Override
-        public void onClick(View v) {
+        protected void onStop() {
+                super.onStop();
+                backgroundMusic.stop();
+        }
 
+        @Override
+        protected void onResume() {
+                super.onResume();
+                backgroundMusic= MediaPlayer.create(GameActivity.this,R.raw.bricks_background_music);
+                backgroundMusic.start();
+        }
+
+        @Override
+        public void onClick(View v) {
+                if(v==soundImg){
+                        if(music) {
+                                soundImg.setImageResource(android.R.drawable.ic_lock_silent_mode);
+                                backgroundMusic.setVolume(0f, 0f);
+                                music = false;
+                        }
+                        else {
+                                soundImg.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
+                                backgroundMusic.setVolume(1f, 1f);
+                                music = true;
+                        }
+                }
         }
 }
 
