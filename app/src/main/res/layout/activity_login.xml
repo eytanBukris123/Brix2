@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/bricks_background"
     android:gravity="center"
     tools:context=".LoginActivity"
     android:padding="20dp">
@@ -15,6 +16,7 @@
         android:textSize="30sp"
         android:gravity="center"
         android:textStyle="bold"
+        android:textColor = "#FF9800"
         android:layout_marginBottom="20dp"
         android:text="@string/login"
         />
@@ -28,6 +30,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/email"
             android:hint="@string/email"
+            android:background = "#FFDCA8"
             android:layout_marginBottom="10dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -41,6 +44,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/password"
             android:hint="@string/password"
+            android:background = "#FFDCA8"
             android:layout_marginBottom="10dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -52,7 +56,7 @@
         android:visibility="gone"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnLogin"
         android:text="@string/login"/>
@@ -64,6 +68,7 @@
         android:layout_marginTop="20dp"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor = "#FF9800"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

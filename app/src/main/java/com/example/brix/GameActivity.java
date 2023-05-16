@@ -84,7 +84,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
                 powerLvl = sharedPref.getInt("PowerLvl", 1);
                 speedLvl = sharedPref.getInt("SpeedLvl", 1);
-                skinLvl = sharedPref.getInt("SkinLvl", 0) - 1;
+                skinLvl = sharedPref.getInt("SkinLvl", 1) - 1;
                 pickaxe = new Pickaxe(this, skinLvl, speedLvl, powerLvl);
                 gameLayout.addView(pickaxe);
                 pickaxe.setX(450);

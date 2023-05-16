@@ -72,8 +72,26 @@
         android:id="@+id/instructionsBtn"
         android:layout_width="59dp"
         android:layout_height="59dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="125dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@android:drawable/ic_menu_sort_by_size"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="656dp" />
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/signoutBtn"
+        android:layout_width="42dp"
+        android:layout_height="51dp"
+        android:layout_marginBottom="72dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintStart_toEndOf="@+id/instructionsBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.131"
+        app:srcCompat="@drawable/sign_out" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

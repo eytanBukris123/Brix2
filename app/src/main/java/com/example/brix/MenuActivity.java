@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ImageView playbtn, shopbtn, instructionsBtn;
+    ImageView playbtn, shopbtn, instructionsBtn, signoutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,10 +21,12 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
         playbtn = findViewById(R.id.playbtn);
         shopbtn = findViewById(R.id.shopbtn);
+        signoutBtn = findViewById(R.id.signoutBtn);
         instructionsBtn = findViewById(R.id.instructionsBtn);
         playbtn.setOnClickListener(this);
         shopbtn.setOnClickListener(this);
         instructionsBtn.setOnClickListener(this);
+        signoutBtn.setOnClickListener(this);
         }
 
     @Override
@@ -38,6 +42,12 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         else if(v==instructionsBtn){
             Intent intent = new Intent(MenuActivity.this, InstructionsActivity.class);
             startActivity(intent);
+        }
+        else if(v == signoutBtn){
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 }
