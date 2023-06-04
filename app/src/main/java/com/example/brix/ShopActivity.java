@@ -14,6 +14,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button upgradePower, upgradeSpeed, upgradeSkin;
@@ -26,6 +37,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     boolean haveWitchPickaxe = false;
     int powerPrice, speedPrice, skinPrice;
     MediaPlayer buySound;
+    FirebaseDatabase database;
+    DatabaseReference usersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +83,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
             maxLvl(upgradeSkin);
         }
 
+        database = FirebaseDatabase.getInstance();
+        usersRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid());
+
     }
 
     public static void maxLvl(Button maxLvlBtn){
@@ -83,6 +99,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         if(v==upgradePower){
             if((numOfCoins >= powerPrice)) {
                 powerLvl++;
+                usersRef.child("power").setValue(powerLvl);
                 buySound.start();
                 powerTitle.setText("Power Level " + powerLvl);
                 SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
@@ -102,6 +119,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         else if(v==upgradeSpeed){
             if(numOfCoins >= speedPrice) {
                 speedLvl++;
+                usersRef.child("speed").setValue(speedLvl);
                 buySound.start();
                 speedTitle.setText("Power Level " + speedLvl);
                 SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
@@ -122,6 +140,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
             if(numOfCoins>=skinPrice){
                 SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
                 skinLvl++;
+                usersRef.child("skin").setValue(skinLvl);
                 buySound.start();
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt("SkinLvl", skinLvl);

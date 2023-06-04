@@ -22,6 +22,10 @@ import android.graphics.Rect;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class GameActivity extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener {
 
         Brick brick1, brick2;
@@ -43,6 +47,9 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         MediaPlayer backgroundMusic;
         ImageView soundImg;
         boolean music = true;
+
+        FirebaseDatabase database;
+        DatabaseReference usersRef;
 
 
         @Override
@@ -73,9 +80,9 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 //                SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
 //                SharedPreferences.Editor editor = sharedPref.edit();
 //                editor.putInt("SkinLvl", 1);
-//                editor.putInt("PowerLvl", 2);
-//                editor.putInt("SpeedLvl", 3);
-//                editor.putInt("Coins", 1000);
+//                editor.putInt("PowerLvl", 1);
+//                editor.putInt("SpeedLvl", 4);
+//                editor.putInt("Coins", 500);
 //                editor.apply();
 
         }
@@ -214,6 +221,9 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt("Coins", numOfCoins);
                 editor.apply();
+                database = FirebaseDatabase.getInstance();
+                usersRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid());
+                usersRef.child("coins").setValue(numOfCoins);
         }
 
         @Override

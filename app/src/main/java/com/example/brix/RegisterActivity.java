@@ -2,8 +2,15 @@ package com.example.brix;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,14 +25,22 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.ktx.Firebase;
 
 public class RegisterActivity extends AppCompatActivity {
+
+    NotificationManagerCompat notificationManagerCompat;
+    Notification notification;
 
     TextInputEditText emailEt, passwordEt;
     Button btnRegister;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView loginNow;
+    FirebaseDatabase database;
+    DatabaseReference usersRef;
 
     @Override
     public void onStart() {
@@ -49,6 +64,23 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         btnRegister = findViewById(R.id.btnRegister);
         loginNow = findViewById(R.id.loginNow);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("myCh", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "myCh")
+                .setSmallIcon(R.drawable.pickaxe)
+                .setContentTitle("Welcome to bricks!!!")
+                .setContentText("You can start mine stones now :)")
+                .setColor(Color.parseColor("" +
+                        "#FF9800"));
+
+        notification = builder.build();
+        notificationManagerCompat = NotificationManagerCompat.from(this);
 
         loginNow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +116,15 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(RegisterActivity.this, "Account created",
                                             Toast.LENGTH_SHORT).show();
+                                    notificationManagerCompat.notify(1, notification);
+
+                                    database = FirebaseDatabase.getInstance();
+                                    usersRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid());
+                                    insertUserData();
+
+
+                                    Intent intent = new Intent(RegisterActivity.this, MenuActivity.class);
+                                    startActivity(intent);
 
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -97,4 +138,10 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+    private void insertUserData(){
+        Users user = new Users(0, 1, 1, 1);
+        usersRef.setValue(user);
+    }
+
 }
