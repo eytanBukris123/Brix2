@@ -109,37 +109,12 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 int coinValue = size*2;
                 int time = 12/(brickType+1);
                 brick1 = new Brick(this, size, time, brickType, size*70);
-//                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
-//                brick1.setLayoutParams(lp);
                 gameLayout.addView(brick1);
                 brick1.setX(r.nextInt(800));
                 brick1.setY(r.nextInt(1600));
                 brickTime(time, brick1);
-//                handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                                if(!brick2create) {
-//                                        createBrick2();
-//                                        brick2create = true;
-//                                }
-//                        }
-//                }, 5000);
         }
 
-//        public void createBrick2(){
-//                Random r = new Random();
-//                int size = r.nextInt(8) + 1;
-//                int brickType = r.nextInt(3);
-//                int coinValue = size*2;
-//                int time = 12/(brickType+1);
-//                brick2 = new Brick(this, size, time, brickType, size*70);
-////              LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
-////              brick1.setLayoutParams(lp);
-//                gameLayout.addView(brick2);
-//                brick2.setX(r.nextInt(800));
-//                brick2.setY(r.nextInt(1600));
-//                brickTime(time, brick2, 2);
-//        }
 
         public void brickTime(int time, ImageView brick){
                 handler.postDelayed(new Runnable() {

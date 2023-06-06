@@ -72,13 +72,13 @@
         android:id="@+id/instructionsBtn"
         android:layout_width="59dp"
         android:layout_height="59dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginBottom="125dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="116dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@android:drawable/ic_menu_sort_by_size"
+        app:layout_constraintVertical_bias="0.888"
+        app:srcCompat="@drawable/game_rules_icon"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -92,6 +92,6 @@
         app:layout_constraintStart_toEndOf="@+id/instructionsBtn"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.131"
-        app:srcCompat="@drawable/sign_out" />
+        app:srcCompat="@drawable/logout_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
