@@ -23,8 +23,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class GameActivity extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener {
 
@@ -39,7 +42,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         boolean canHit = true;
         int numOfCoins = 0;
         TextView coinsTv;
-        int timeToHit = 1000;
+        int timeToHit;
         int powerLvl;
         int speedLvl;
         int skinLvl;
@@ -49,29 +52,23 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         boolean music = true;
 
         FirebaseDatabase database;
-        DatabaseReference usersRef;
+        DatabaseReference powerRef, speedRef, skinRef, coinsRef;
 
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_game);
-
                 handler = new Handler();
+                getPickaxeDate();
                 gameLayout = findViewById(R.id.gameLayout);
                 soundImg = findViewById(R.id.soundImg);
                 soundImg.setOnClickListener(this);
-                createPickaxe();
-                pickaxe.setZ(2);
-                pickaxe.getParent().requestLayout();
-                pickaxe.setOnClickListener(this);
-                pickaxe.setOnTouchListener(this);
                 createBrick();
                 brick1.setOnClickListener(this);
                 coinsTv = findViewById(R.id.coinsTv);
                 numOfCoins = getNumberOfCoins();
                 coinsTv.setText("" + numOfCoins);
-                timeToHit = (11-pickaxe.getSpeed())*150;
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -88,10 +85,6 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         public void createPickaxe(){
-                SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
-                powerLvl = sharedPref.getInt("PowerLvl", 1);
-                speedLvl = sharedPref.getInt("SpeedLvl", 1);
-                skinLvl = sharedPref.getInt("SkinLvl", 1) - 1;
                 pickaxe = new Pickaxe(this, skinLvl, speedLvl, powerLvl);
                 gameLayout.addView(pickaxe);
                 pickaxe.setX(450);
@@ -99,6 +92,11 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 if(skinLvl == 5){
                         pickaxe.setLayoutParams(new LinearLayout.LayoutParams(600, 600));
                 }
+                pickaxe.setZ(2);
+                pickaxe.getParent().requestLayout();
+                pickaxe.setOnClickListener(GameActivity.this);
+                pickaxe.setOnTouchListener(GameActivity.this);
+                timeToHit = (11-speedLvl)*150;
 
         }
 
@@ -192,13 +190,9 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         public void setNumberOfCoins(int numOfCoins) {
-                SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putInt("Coins", numOfCoins);
-                editor.apply();
                 database = FirebaseDatabase.getInstance();
-                usersRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid());
-                usersRef.child("coins").setValue(numOfCoins);
+                coinsRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("coins");
+                coinsRef.setValue(numOfCoins);
         }
 
         @Override
@@ -305,6 +299,99 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 }
         }
 
+        public void getPickaxeDate (){
+                database = FirebaseDatabase.getInstance("https://bricks-86a18-default-rtdb.firebaseio.com/");
+
+                powerRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("power");
+                powerRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                if(snapshot.exists()){
+                                        powerLvl = snapshot.getValue(int.class);
+                                }
+                                else{
+                                        powerLvl = 1;
+                                }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                });
+
+                speedRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("speed");
+                speedRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                if(snapshot.exists()){
+                                        speedLvl = snapshot.getValue(int.class);
+                                }
+                                else{
+                                        speedLvl = 1;
+                                }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                });
+
+                skinRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("skin");
+                skinRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                if(snapshot.exists()){
+                                        skinLvl = snapshot.getValue(int.class);
+                                }
+                                else{
+                                        skinLvl = 1;
+                                }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                });
+
+                coinsRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("coins");
+                coinsRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                if(snapshot.exists()){
+                                        numOfCoins = snapshot.getValue(int.class);
+                                        coinsTv.setText("" + numOfCoins);
+                                }
+                                else{
+                                        coinsTv.setText("0");
+                                }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                });
+
+                handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                                createPickaxe();
+                        }
+                }, 2000);
+
+        }
+
         public void OpenGiftWindow(int number){
                 final Dialog dialog = new Dialog(GameActivity.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -332,10 +419,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                 }
                                 else{
                                         numOfCoins+=number;
-                                        SharedPreferences sharedPref = getSharedPreferences("application", MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPref.edit();
-                                        editor.putInt("Coins", numOfCoins);
-                                        editor.apply();
+                                        setNumberOfCoins(numOfCoins);
                                         coinsTv.setText("" + numOfCoins);
 
                                         dialog.cancel();

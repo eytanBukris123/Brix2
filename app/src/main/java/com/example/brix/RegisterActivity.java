@@ -27,7 +27,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.ktx.Firebase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -140,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void insertUserData(){
-        Users user = new Users(0, 1, 1, 1);
+        User user = new User(0, 1, 1, 1);
         usersRef.setValue(user);
     }
 

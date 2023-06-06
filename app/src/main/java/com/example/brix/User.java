@@ -1,13 +1,13 @@
 package com.example.brix;
 
-public class Users {
+public class User {
 
     int coins;
     int power;
     int speed;
     int skin;
 
-    public Users(int coins, int power, int speed, int skin){
+    public User(int coins, int power, int speed, int skin){
         this.coins = coins;
         this.power = power;
         this.speed = speed;
