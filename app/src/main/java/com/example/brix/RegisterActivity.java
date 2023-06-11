@@ -136,10 +136,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                     notificationManagerCompat.notify(1, notification);
 
-                                    database = FirebaseDatabase.getInstance();
-                                    usersRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid());
                                     insertUserData();
-
 
                                     Intent intent = new Intent(RegisterActivity.this, MenuActivity.class);
                                     startActivity(intent);
@@ -158,6 +155,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     //insert user data to firebase
     private void insertUserData(){
+        database = FirebaseDatabase.getInstance();
+        usersRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid());
         User user = new User(0, 1, 1, 1);
         usersRef.setValue(user);
     }

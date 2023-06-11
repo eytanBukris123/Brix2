@@ -44,4 +44,14 @@
         app:layout_constraintVertical_bias="0.023"
         app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
 
+    <ImageView
+        android:id="@+id/orangeScreen"
+        android:layout_width="900dp"
+        android:layout_height="900dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/orange_circle" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

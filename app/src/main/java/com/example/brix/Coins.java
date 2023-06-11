@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 public class Coins extends androidx.appcompat.widget.AppCompatImageView{
 
     private int time;
-    private String[] types = {"stone", "silver", "gold", "diamond"};
     int coinType;
     int coinValue;
 

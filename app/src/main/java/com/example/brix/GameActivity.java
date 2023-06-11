@@ -2,25 +2,23 @@ package com.example.brix;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.os.Handler;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import android.content.SharedPreferences;
-import java.util.Random;
-import android.graphics.Rect;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,15 +27,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Random;
+
 public class GameActivity extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener {
 
-        Brick brick1, brick2;
+        Brick brick;
         Coins coin;
         GiftBox giftBox;
         ConstraintLayout gameLayout;
         Pickaxe pickaxe;
         float xDown = 0, yDown = 0;
-        Animation pickaxeHitAnim;
         Handler handler;
         boolean canHit = true;
         int numOfCoins = 0;
@@ -50,9 +49,11 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         MediaPlayer backgroundMusic;
         ImageView soundImg;
         boolean music = true;
+        ImageView orangeScreen;
 
         FirebaseDatabase database;
         DatabaseReference powerRef, speedRef, skinRef, coinsRef;
+        SharedPreferences sharedPreferences;
 
 
         @Override
@@ -73,19 +74,22 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 soundImg = findViewById(R.id.soundImg);
                 soundImg.setOnClickListener(this);
                 coinsTv = findViewById(R.id.coinsTv);
-                numOfCoins = getNumberOfCoins();
                 coinsTv.setText("" + numOfCoins);
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 handler = new Handler();
+                sharedPreferences = getSharedPreferences("sharedPreferences", Context.MODE_PRIVATE);
+                orangeScreen = findViewById(R.id.orangeScreen);
+                orangeScreen.animate().scaleX(0).scaleY(0).setDuration(2300).start();
+                orangeScreen.setZ(3);
         }
 
         //create pickaxe object
         public void createPickaxe(){
                 pickaxe = new Pickaxe(this, skinLvl, speedLvl, powerLvl);
                 gameLayout.addView(pickaxe);
-                pickaxe.setX(450);
-                pickaxe.setY(850);
+                pickaxe.setX(370);
+                pickaxe.setY(800);
                 if(skinLvl == 5){
                         pickaxe.setLayoutParams(new LinearLayout.LayoutParams(600, 600));
                 }
@@ -104,11 +108,11 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 int brickType = r.nextInt(3);
                 int coinValue = size*2;
                 int time = 12/(brickType+1);
-                brick1 = new Brick(this, size, time, brickType, size*70);
-                gameLayout.addView(brick1);
-                brick1.setX(r.nextInt(800));
-                brick1.setY(r.nextInt(1600));
-                brickTime(time, brick1);
+                brick = new Brick(this, size, time, brickType, size*70);
+                gameLayout.addView(brick);
+                brick.setX(r.nextInt(800));
+                brick.setY(r.nextInt(1600));
+                brickTime(time, brick);
         }
 
         //set brick shown time
@@ -126,11 +130,11 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 
         //create coins object
         public void createCoins(){
-                int coinValue = brick1.getSize()/100 + (brick1.getBrickType()+1)*10;
+                int coinValue = brick.getSize()/100 + (brick.getBrickType()+1)*10;
                 coin = new Coins(GameActivity.this, 3, 2, coinValue);
                 gameLayout.addView(coin);
-                coin.setX(brick1.getX());
-                coin.setY(brick1.getY());
+                coin.setX(brick.getX());
+                coin.setY(brick.getY());
                 coin.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 MediaPlayer coinsCollected= MediaPlayer.create(GameActivity.this,R.raw.cash_register);
@@ -185,11 +189,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 }, 10000*giftTime);
         }
 
-        public int getNumberOfCoins() {
-                SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
-                return sharedPref.getInt("Coins", 0);
-        }
-
+        //save number of coins in firebase
         public void setNumberOfCoins(int numOfCoins) {
                 database = FirebaseDatabase.getInstance();
                 coinsRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("coins");
@@ -237,11 +237,11 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                 @Override
                                 public void run() {
                                         pickaxe.animate().rotation(0).setDuration(timeToHit-300).start();
-                                        if(Collision(brick1, pickaxe, 1)){
+                                        if(Collision(brick, pickaxe)){
                                                 MediaPlayer hitSound= MediaPlayer.create(GameActivity.this,R.raw.hit);
                                                 hitSound.start();
-                                                if(brick1.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.bomb).getConstantState()){
-                                                        numOfCoins -= 50*(brick1.getSize()/70);
+                                                if(brick.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.bomb).getConstantState()){
+                                                        numOfCoins -= 50*(brick.getSize()/70);
                                                         MediaPlayer bombExplosion= MediaPlayer.create(GameActivity.this,R.raw.bombexplosion);
                                                         bombExplosion.start();
                                                         if(numOfCoins<0){
@@ -249,29 +249,25 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                                         }
                                                         coinsTv.setText("" + numOfCoins);
                                                         setNumberOfCoins(numOfCoins);
-                                                        SharedPreferences sharedPref = getSharedPreferences("application", GameActivity.MODE_PRIVATE);
-                                                        SharedPreferences.Editor editor = sharedPref.edit();
-                                                        editor.putInt("Coins", numOfCoins);
-                                                        editor.apply();
                                                         createCoins();
-                                                        brick1.setVisibility(View.GONE);
+                                                        brick.setVisibility(View.GONE);
                                                         createBrick();
                                                 }
                                                 else {
                                                         Random r = new Random();
                                                         int bomb = r.nextInt(10) + 1;
                                                         if (bomb == 7) {
-                                                                brick1.setImageResource(R.drawable.bomb);
+                                                                brick.setImageResource(R.drawable.bomb);
                                                                 handler.postDelayed(new Runnable() {
                                                                         @Override
                                                                         public void run() {
-                                                                                brick1.setVisibility(View.GONE);
+                                                                                brick.setVisibility(View.GONE);
                                                                                 createCoins();
                                                                                 createBrick();
                                                                         }
                                                                 }, 5000);
-                                                        } else if (brick1.Hit(pickaxe.getDammage())) {
-                                                                brick1.setVisibility(View.GONE);
+                                                        } else if (brick.Hit(pickaxe.getDammage())) {
+                                                                brick.setVisibility(View.GONE);
                                                                 hitSound.stop();
                                                                 MediaPlayer rockBreakSound= MediaPlayer.create(GameActivity.this,R.raw.rock_destroy);
                                                                 rockBreakSound.setVolume(0.15f, 0.15f);
@@ -282,14 +278,6 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                                         }
                                                 }
                                         }
-//                                        if(brick2!=null) {
-//                                                if (Collision(brick2, pickaxe, 2)) {
-//                                                        if (brick2.Hit(pickaxe.getDammage())) {
-//                                                                brick2.setVisibility(View.GONE);
-//                                                                createCoins();
-//                                                        }
-//                                                }
-//                                        }
                                         handler.postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -451,21 +439,17 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         //check pickaxe hit brick
-        public boolean Collision(ImageView brick, ImageView pickaxe, int num)
+        public boolean Collision(ImageView brick, ImageView pickaxe)
         {
                 Rect PickaxeRect = new Rect();
                 pickaxe.getHitRect(PickaxeRect);
                 Rect BrickRect = new Rect();
-                if(num==2){
-                        brick2.getHitRect(BrickRect);
-                }
-                else{
-                        brick1.getHitRect(BrickRect);
-                }
+                this.brick.getHitRect(BrickRect);
+
                 return PickaxeRect.intersect(BrickRect);
         }
 
-        //re
+        //reset user data in firebase
         private void resetFirefoxData(){
                 database = FirebaseDatabase.getInstance();
                 powerRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("power");
@@ -501,11 +485,23 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 super.onResume();
                 backgroundMusic= MediaPlayer.create(GameActivity.this,R.raw.bricks_background_music);
                 backgroundMusic.start();
+                music = sharedPreferences.getBoolean("musicOn", false);
+                if(music) {
+                        soundImg.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
+                        backgroundMusic.setVolume(1f, 1f);
+                        music = true;
+                }
+                else {
+                        soundImg.setImageResource(android.R.drawable.ic_lock_silent_mode);
+                        backgroundMusic.setVolume(0f, 0f);
+                        music = false;
+                }
         }
 
         @Override
         public void onClick(View v) {
                 if(v==soundImg){
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
                         if(music) {
                                 soundImg.setImageResource(android.R.drawable.ic_lock_silent_mode);
                                 backgroundMusic.setVolume(0f, 0f);
@@ -516,6 +512,8 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                 backgroundMusic.setVolume(1f, 1f);
                                 music = true;
                         }
+                        editor.putBoolean("musicOn", music);
+                        editor.apply();
                 }
         }
 }

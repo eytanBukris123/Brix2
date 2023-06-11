@@ -31,7 +31,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     int skinLvl;
     TextView coinsTv;
     TextView powerTitle, speedTitle;
-    boolean haveWitchPickaxe = false;
     int powerPrice, speedPrice, skinPrice;
     MediaPlayer buySound;
     FirebaseDatabase database;

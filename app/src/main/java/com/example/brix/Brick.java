@@ -10,8 +10,7 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
 
     private int health;
     private int time;
-    private String[] types = {"stone", "silver", "gold", "diamond"};
-    private String type;
+    private String[] types = {"silver", "gold", "diamond"};
     private int brickType;
     private int size;
 
@@ -24,7 +23,6 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
         super(context);
         this.health = health;
         this.time = time;
-        this.type = types[brickType];
         this.brickType = brickType;
         this.size = size;
         if(brickType==0){
