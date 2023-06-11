@@ -42,6 +42,13 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
 
+        setLayoutData();
+        getLVLs();
+
+    }
+
+    //setting all layoutObjectsData
+    private void setLayoutData(){
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -56,9 +63,10 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         upgradePower.setOnClickListener(this);
         upgradeSpeed.setOnClickListener(this);
         coinsTv = findViewById(R.id.coinsTv);
+    }
 
-        final ArrayList<User> users = new ArrayList<>();
-
+    //get levels data from firebase
+    private void getLVLs(){
         database = FirebaseDatabase.getInstance("https://bricks-86a18-default-rtdb.firebaseio.com/");
 
         powerRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("power");
@@ -163,9 +171,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
     }
 
+    //set button to max level mode
     public static void maxLvl(Button maxLvlBtn){
         maxLvlBtn.setText("MAX LVL");
         maxLvlBtn.setBackgroundColor(Color.GRAY);

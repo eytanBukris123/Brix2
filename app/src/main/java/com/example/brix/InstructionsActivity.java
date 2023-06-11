@@ -24,6 +24,12 @@ public class InstructionsActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructions);
 
+        setLayoutData();
+
+    }
+
+    //setting all layoutObjectsData
+    private void setLayoutData(){
         instructionsImg = findViewById(R.id.instructionsImg);
         leftArrow = findViewById(R.id.leftArrow);
         rightArrow = findViewById(R.id.rightArrow);
@@ -35,8 +41,6 @@ public class InstructionsActivity extends AppCompatActivity implements View.OnCl
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-
     }
 
     @Override

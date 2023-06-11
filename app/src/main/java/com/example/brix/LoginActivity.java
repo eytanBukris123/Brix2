@@ -28,6 +28,17 @@ public class LoginActivity extends AppCompatActivity {
     TextView registerNow;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        setLayoutData();
+        moveToRegister();
+        login();
+
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -39,18 +50,19 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
+    //setting all layoutObjectsData
+    private void setLayoutData(){
         mAuth = FirebaseAuth.getInstance();
         emailEt = findViewById(R.id.email);
         passwordEt = findViewById(R.id.password);
         progressBar = findViewById(R.id.progressBar);
         btnLogin = findViewById(R.id.btnLogin);
         registerNow = findViewById(R.id.registerNow);
+    }
 
+
+    //moving to register page
+    private void moveToRegister(){
         registerNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,7 +71,10 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
 
+    //login action
+    private void login(){
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,6 +110,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
     }
+
 }

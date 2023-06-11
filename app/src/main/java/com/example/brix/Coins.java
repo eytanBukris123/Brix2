@@ -28,6 +28,7 @@ public class Coins extends androidx.appcompat.widget.AppCompatImageView{
         this.time = time;
     }
 
+    //collect coins
     public int collect(){
 
         this.setVisibility(View.GONE);

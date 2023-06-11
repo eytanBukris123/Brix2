@@ -59,31 +59,28 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_game);
-                handler = new Handler();
+
+                setLayoutData();
                 getPickaxeDate();
+                createBrick();
+                createGift(5000);
+
+        }
+
+        //setting all layoutObjectsData
+        private void setLayoutData() {
                 gameLayout = findViewById(R.id.gameLayout);
                 soundImg = findViewById(R.id.soundImg);
                 soundImg.setOnClickListener(this);
-                createBrick();
-                brick1.setOnClickListener(this);
                 coinsTv = findViewById(R.id.coinsTv);
                 numOfCoins = getNumberOfCoins();
                 coinsTv.setText("" + numOfCoins);
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.setDisplayHomeAsUpEnabled(true);
-
-                createGift(5000);
-
-//                SharedPreferences sharedPref = getSharedPreferences("application", this.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = sharedPref.edit();
-//                editor.putInt("SkinLvl", 1);
-//                editor.putInt("PowerLvl", 1);
-//                editor.putInt("SpeedLvl", 4);
-//                editor.putInt("Coins", 500);
-//                editor.apply();
-
+                handler = new Handler();
         }
 
+        //create pickaxe object
         public void createPickaxe(){
                 pickaxe = new Pickaxe(this, skinLvl, speedLvl, powerLvl);
                 gameLayout.addView(pickaxe);
@@ -100,6 +97,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 
         }
 
+        //create brick object
         public void createBrick(){
                 Random r = new Random();
                 int size = r.nextInt(10) + 1;
@@ -113,7 +111,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 brickTime(time, brick1);
         }
 
-
+        //set brick shown time
         public void brickTime(int time, ImageView brick){
                 handler.postDelayed(new Runnable() {
                         @Override
@@ -126,6 +124,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 }, time*1000);
         }
 
+        //create coins object
         public void createCoins(){
                 int coinValue = brick1.getSize()/100 + (brick1.getBrickType()+1)*10;
                 coin = new Coins(GameActivity.this, 3, 2, coinValue);
@@ -144,6 +143,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 coinTime(5, coin);
         }
 
+        //set coins shown time
         public void coinTime(int time, ImageView coin){
                 handler.postDelayed(new Runnable() {
                         @Override
@@ -155,6 +155,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 }, time*1000);
         }
 
+        //create gift object
         public void createGift(int time){
                 Random r = new Random();
                 int giftTime = r.nextInt(7)+3;
@@ -227,6 +228,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                         return true;
         }
 
+        // pickaxe hitting action
         public void Hit(){
                 if(canHit) {
                         canHit = false;
@@ -299,6 +301,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 }
         }
 
+        //get pickaxe data from firebase
         public void getPickaxeDate (){
                 database = FirebaseDatabase.getInstance("https://bricks-86a18-default-rtdb.firebaseio.com/");
 
@@ -392,6 +395,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 
         }
 
+        //gift dialog
         public void OpenGiftWindow(int number){
                 final Dialog dialog = new Dialog(GameActivity.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -446,6 +450,7 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
 
         }
 
+        //check pickaxe hit brick
         public boolean Collision(ImageView brick, ImageView pickaxe, int num)
         {
                 Rect PickaxeRect = new Rect();
@@ -458,6 +463,21 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                         brick1.getHitRect(BrickRect);
                 }
                 return PickaxeRect.intersect(BrickRect);
+        }
+
+        //re
+        private void resetFirefoxData(){
+                database = FirebaseDatabase.getInstance();
+                powerRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("power");
+                speedRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("speed");
+                skinRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("skin");
+                coinsRef = database.getReference("users/" + FirebaseAuth.getInstance().getUid()).child("coins");
+                powerRef.setValue(1);
+                speedRef.setValue(1);
+                skinRef.setValue(1);
+                coinsRef.setValue(0);
+                numOfCoins = 0;
+                coinsTv.setText("0");
         }
 
         @Override
@@ -499,34 +519,3 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                 }
         }
 }
-
-//class myBackgroundService extends Service {
-//
-//
-//
-//        @Override
-//        public int onStartCommand(Intent intent, int flags, int startId) {
-//                new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                                while(true){
-//
-//
-//                                        try {
-//                                                Thread.sleep(3000);
-//                                        } catch (InterruptedException e) {
-//                                                e.printStackTrace();
-//                                        }
-//                                }
-//                        }
-//                });
-//                return super.onStartCommand(intent, flags, startId);
-//
-//        }
-//
-//        @Nullable
-//        @Override
-//        public IBinder onBind(Intent intent) {
-//                return null;
-//        }
-//}

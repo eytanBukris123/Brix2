@@ -80,6 +80,7 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
         this.size = size;
     }
 
+    //lose health when brick is hit and check if brick destroyed
     public boolean Hit(int damage){
         this.health-= damage;
         if(health<=0) {
@@ -94,18 +95,6 @@ public class Brick extends androidx.appcompat.widget.AppCompatImageView{
         }
             return false;
     }
-
-//
-//    public void timer(){
-//        Handler h2 = new Handler();
-//        Runnable run = new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                h2.postDelayed(this, 500);
-//            }
-//        };
-//    }
 
 
 }

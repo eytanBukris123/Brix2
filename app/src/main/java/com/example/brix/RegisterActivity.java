@@ -57,13 +57,38 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        setLayoutData();
+        moveToLogin();
+        setNotification();
+        register();
+
+    }
+
+    //setting all layoutObjectsData
+    private void setLayoutData(){
         mAuth = FirebaseAuth.getInstance();
         emailEt = findViewById(R.id.email);
         passwordEt = findViewById(R.id.password);
         progressBar = findViewById(R.id.progressBar);
         btnRegister = findViewById(R.id.btnRegister);
         loginNow = findViewById(R.id.loginNow);
+    }
 
+    //moving to login page
+    private void moveToLogin(){
+        loginNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    //set notification information
+    private void setNotification(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel channel = new NotificationChannel("myCh", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
 
@@ -80,16 +105,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         notification = builder.build();
         notificationManagerCompat = NotificationManagerCompat.from(this);
+    }
 
-        loginNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
+    //register action
+    private void register(){
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,9 +154,9 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
+    //insert user data to firebase
     private void insertUserData(){
         User user = new User(0, 1, 1, 1);
         usersRef.setValue(user);
