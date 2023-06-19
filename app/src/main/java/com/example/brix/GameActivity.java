@@ -339,10 +339,10 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                                 if(snapshot.exists()){
-                                        skinLvl = snapshot.getValue(int.class);
+                                        skinLvl = snapshot.getValue(int.class)-1;
                                 }
                                 else{
-                                        skinLvl = 1;
+                                        skinLvl = 0;
                                 }
 
                         }
@@ -408,12 +408,11 @@ public class GameActivity extends AppCompatActivity implements View.OnTouchListe
                                         MediaPlayer openGift = MediaPlayer.create(GameActivity.this, R.raw.open_gift);
                                         openGift.start();
                                         giftOpen = true;
-                                }
-                                else{
                                         numOfCoins+=number;
                                         setNumberOfCoins(numOfCoins);
                                         coinsTv.setText("" + numOfCoins);
-
+                                }
+                                else{
                                         dialog.cancel();
                                 }
                         }

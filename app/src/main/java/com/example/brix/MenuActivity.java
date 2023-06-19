@@ -1,7 +1,5 @@
 package com.example.brix;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
@@ -19,6 +19,7 @@ import java.util.Calendar;
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageView playbtn, shopbtn, instructionsBtn, signoutBtn;
+    PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +55,22 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             calendar.set(Calendar.MINUTE, 00);
             calendar.set(Calendar.SECOND, 00);
 
-            if(Calendar.getInstance().after(calendar)){
+            if (Calendar.getInstance().after(calendar)) {
                 calendar.add(Calendar.DAY_OF_MONTH, 1);
             }
 
             Intent intent = new Intent(MenuActivity.this, MemoBrodcast.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            PendingIntent pendingIntent;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+            } else {
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            }
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-            }
+
         }
 
         //creating notification channel
